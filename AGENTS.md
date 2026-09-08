@@ -38,7 +38,7 @@ skills/<skill-name>/
 
 - Every skill folder **must** have `SKILL.md`.
 - `subskills/` and `scripts/` are **flat** (no nested directories).
-- Do **not** list subskills/scripts in frontmatter; reference them by **filename** in `SKILL.md` and/or subskill bodies.
+- Do **not** list subskills/scripts in frontmatter; reference them as `subskills/[name]` and `scripts/[name]` in `SKILL.md` and/or subskill bodies.
 - Unfinished files: name them `*.TODO.<ext>` (e.g. `draft.TODO.md`, `explore.TODO.py`). They are exempt from reference coverage.
 - After changing skills, run `skill-structure-check`, `skill-reference-check`, `skill-frontmatter-check`, and `skill-sync` as needed. These also run on **pre-commit**.
 
@@ -70,7 +70,7 @@ No `license` field. No `scripts:` / `subskills:` frontmatter lists.
 ### Reference coverage
 
 - Scanned sources: `SKILL.md` **+** all files in `subskills/`.
-- Every non-`TODO` file in `subskills/` and `scripts/` must appear by filename in those sources.
+- Every non-`TODO` file in `subskills/` and `scripts/` must appear as `subskills/[name]` or `scripts/[name]` in those sources.
 - Do **not** enforce reference delimiter markup.
 - Do **not** fail on dangling references (mentioned name with no file).
 
@@ -89,7 +89,7 @@ Do not hand-edit `src/generated/skills.ts`; change skills on disk and re-sync.
 
 ### Generated skill shape (target)
 
-`SkillDefinition`: `id`, `name`, `description`, `metadata`, `content`, `subskills[]` (`path` like `subskills/greet.md` + `content`), `scripts[]` (`path` like `scripts/shout.ts` + `language` + `content`).  
+`SkillDefinition`: `id` (folder name), `name`, `description`, `metadata`, `content`, `subskills[]` (`path` like `subskills/greet.md` + `content`), `scripts[]` (`path` like `scripts/shout.ts` + `language` + `content`).  
 Also export `skills`, `skillsById`, `alwaysAttachedSkills`.  
 `*.TODO.*` files are **omitted** from the generated registry (authoring-only; not for the agent).
 

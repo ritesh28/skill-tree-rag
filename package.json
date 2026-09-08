@@ -17,11 +17,13 @@
   },
   "devDependencies": {
     "@types/node": "^22.20.1",
+    "@types/pdfkit": "^0.17.6",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
+    "pdfkit": "^0.20.2",
     "zod": "^4.5.4"
   }
 }

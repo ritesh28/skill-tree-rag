@@ -35,15 +35,18 @@ export class SkillReferenceCheck {
     const haystack = sources.join("\n");
 
     const required = [
-      ...files.subskillFiles.map((f) => f.fileName),
-      ...files.scriptFiles.map((f) => f.fileName),
-    ].filter((fileName) => !SkillPaths.isSkippedFileName(fileName));
+      ...files.subskillFiles.map((f) => `subskills/${f.fileName}`),
+      ...files.scriptFiles.map((f) => `scripts/${f.fileName}`),
+    ].filter((refPath) => {
+      const fileName = refPath.split("/").pop() ?? refPath;
+      return !SkillPaths.isSkippedFileName(fileName);
+    });
 
-    for (const fileName of required) {
-      if (!haystack.includes(fileName)) {
+    for (const refPath of required) {
+      if (!haystack.includes(refPath)) {
         issues.push({
           skillId,
-          message: `"${fileName}" is not referenced in SKILL.md or subskills/ (rename to *.TODO.<ext> to skip)`,
+          message: `"${refPath}" is not referenced in SKILL.md or subskills/ (rename to *.TODO.<ext> to skip)`,
         });
       }
     }
