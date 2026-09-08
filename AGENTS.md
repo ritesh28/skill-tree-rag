@@ -40,7 +40,7 @@ skills/<skill-name>/
 - `subskills/` and `scripts/` are **flat** (no nested directories).
 - Do **not** list subskills/scripts in frontmatter; reference them by **filename** in `SKILL.md` and/or subskill bodies.
 - Unfinished files: name them `*.TODO.<ext>` (e.g. `draft.TODO.md`, `explore.TODO.py`). They are exempt from reference coverage.
-- After changing skills, run `skill-structure-check`, `skill-reference-check`, and `skill-sync` as needed. These also run on **pre-commit**.
+- After changing skills, run `skill-structure-check`, `skill-reference-check`, `skill-frontmatter-check`, and `skill-sync` as needed. These also run on **pre-commit**.
 
 ### `SKILL.md` frontmatter
 
@@ -53,7 +53,6 @@ description: One-line tool description
 metadata:
   attachtype: on-demand   # always | on-demand
   version: "0.1.0"        # recommended
-  tags: [example]         # recommended
   allowedTools: []        # recommended
 ---
 ```
@@ -64,7 +63,6 @@ metadata:
 | `description` | yes |
 | `metadata.attachtype` | yes (`always` \| `on-demand`) |
 | `metadata.version` | recommended |
-| `metadata.tags` | recommended |
 | `metadata.allowedTools` | recommended |
 
 No `license` field. No `scripts:` / `subskills:` frontmatter lists.
@@ -83,6 +81,7 @@ No `license` field. No `scripts:` / `subskills:` frontmatter lists.
 | `skill-sync` | Generate `src/generated/skills.ts` for tool calling |
 | `skill-structure-check` | Validate skill folder layout |
 | `skill-reference-check` | Validate subskill/script reference coverage |
+| `skill-frontmatter-check` | Validate `SKILL.md` frontmatter with Zod |
 | `dev` | Local development |
 | `start` | App entry |
 
@@ -90,8 +89,9 @@ Do not hand-edit `src/generated/skills.ts`; change skills on disk and re-sync.
 
 ### Generated skill shape (target)
 
-`SkillDefinition`: `id` (folder name), `name`, `description`, `metadata`, `dir`, `skillMdPath`, `content`, `subskills[]`, `scripts[]`.  
-Also export `skills`, `skillsById`, `alwaysAttachedSkills`.
+`SkillDefinition`: `id`, `name`, `description`, `metadata`, `content`, `subskills[]` (`path` like `subskills/greet.md` + `content`), `scripts[]` (`path` like `scripts/shout.ts` + `language` + `content`).  
+Also export `skills`, `skillsById`, `alwaysAttachedSkills`.  
+`*.TODO.*` files are **omitted** from the generated registry (authoring-only; not for the agent).
 
 ## App / agent conventions
 
