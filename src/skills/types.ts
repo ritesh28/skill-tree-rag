@@ -20,7 +20,7 @@ export type SkillScriptRef = {
 };
 
 export type SkillDefinition = {
-  /** Skill folder name (stable id) */
+  /** Skill folder name */
   id: string;
   name: string;
   description: string;

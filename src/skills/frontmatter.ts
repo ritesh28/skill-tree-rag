@@ -21,8 +21,12 @@ const skillFrontmatterSchema = skillFrontmatterYamlSchema.transform((data) => ({
   description: data.description,
   metadata: {
     attachType: data.metadata.attachtype,
-    version: data.metadata.version,
-    allowedTools: data.metadata.allowedTools,
+    ...(data.metadata.version !== undefined
+      ? { version: data.metadata.version }
+      : {}),
+    ...(data.metadata.allowedTools !== undefined
+      ? { allowedTools: data.metadata.allowedTools }
+      : {}),
   },
 }));
 
