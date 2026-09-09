@@ -46,7 +46,7 @@ You will be prompted for provider / credentials / model (env vars and `~/.config
 
 - **Ctrl+C** during a reply interrupts generation
 - **`/exit`** or **`/quit`** leaves the chat
-- `ask_question` tool pauses for A/B (or A/B + free-form C)
+- `ask_question` tool can pause for a batch of A/B (or A/B + free-form C) questions
 
 ## Skill checks
 
