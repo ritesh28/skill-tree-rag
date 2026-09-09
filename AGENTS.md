@@ -82,10 +82,10 @@ No `license` field. No `scripts:` / `subskills:` frontmatter lists.
 | `skill-structure-check`   | Validate skill folder layout                        |
 | `skill-reference-check`   | Validate subskill/script reference coverage         |
 | `skill-frontmatter-check` | Validate `SKILL.md` frontmatter with Zod            |
-| `dev`                     | Local development                                   |
-| `start`                   | App entry                                           |
+| `precommit`               | Run all skill checks + sync (used by Husky)         |
+| `dev`                     | Local development chat TUI                          |
 
-Do not hand-edit `src/generated/skills.ts`; change skills on disk and re-sync.
+Do not hand-edit `src/generated/skills.ts`; change skills on disk and re-sync. Husky pre-commit runs `precommit` and stages a regenerated `skills.ts` when needed.
 
 ### Generated skill shape (target)
 

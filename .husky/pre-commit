@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+set -e
+
+npm run precommit
+
+# Keep generated registry in the commit when sync rewrites it
+if ! git diff --quiet -- src/generated/skills.ts; then
+  git add src/generated/skills.ts
+  echo "pre-commit: staged regenerated src/generated/skills.ts"
+fi

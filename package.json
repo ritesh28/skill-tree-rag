@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "tsx src/index.ts",
-    "start": "tsx src/index.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "skill-sync": "tsx src/skills/cli.ts sync",
     "skill-structure-check": "tsx src/skills/cli.ts structure-check",
     "skill-reference-check": "tsx src/skills/cli.ts reference-check",
-    "skill-frontmatter-check": "tsx src/skills/cli.ts frontmatter-check"
+    "skill-frontmatter-check": "tsx src/skills/cli.ts frontmatter-check",
+    "precommit": "npm run skill-structure-check && npm run skill-reference-check && npm run skill-frontmatter-check && npm run skill-sync",
+    "prepare": "husky"
   },
   "engines": {
     "node": ">=20"
@@ -21,6 +22,7 @@
     "@types/node": "^22.20.1",
     "@types/pdfkit": "^0.17.6",
     "@vitest/coverage-v8": "^5.0.0",
+    "husky": "^9.1.7",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
     "vitest": "^5.0.0"
