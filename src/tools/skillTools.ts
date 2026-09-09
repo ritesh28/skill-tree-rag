@@ -138,37 +138,36 @@ export class SkillToolKit {
   private askQuestionTool() {
     return tool({
       description:
-        "Ask the user a clarifying question and wait for their answer. Binary: A/B. More options: top two as A/B plus C free-form when allowFreeform is true.",
+        "Ask one or more clarifying questions in a single pause. Prefer a full batch of needed questions over many separate calls. Each item: binary A/B, or top two as A/B plus C free-form when allowFreeform is true.",
       inputSchema: z.object({
-        question: z.string().describe("Question to show the user"),
-        choices: z
+        questions: z
           .array(
             z.object({
-              id: z.enum(["A", "B", "C"]),
-              label: z.string(),
+              question: z.string().describe("Question to show the user"),
+              choices: z
+                .array(
+                  z.object({
+                    id: z.enum(["A", "B", "C"]),
+                    label: z.string(),
+                  }),
+                )
+                .min(2)
+                .max(3),
+              allowFreeform: z
+                .boolean()
+                .describe(
+                  "If true, include C as free-form text; if false, only A/B binary choice",
+                ),
             }),
           )
-          .min(2)
-          .max(3),
-        allowFreeform: z
-          .boolean()
-          .describe(
-            "If true, include C as free-form text; if false, only A/B binary choice",
-          ),
+          .min(1)
+          .describe("All clarifying questions to ask before continuing"),
       }),
-      execute: async ({ question, choices, allowFreeform }) =>
-        this.withRecording(
-          "ask_question",
-          { question, choices, allowFreeform },
-          async () => {
-            const answer = await this.askQuestion.ask({
-              question,
-              choices,
-              allowFreeform,
-            });
-            return { answer };
-          },
-        ),
+      execute: async ({ questions }) =>
+        this.withRecording("ask_question", { questions }, async () => {
+          const answers = await this.askQuestion.ask({ questions });
+          return { answers };
+        }),
     });
   }
 

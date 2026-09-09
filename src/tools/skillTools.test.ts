@@ -34,7 +34,7 @@ const sampleSkills: SkillDefinition[] = [
 ];
 
 const noopAsk: AskQuestionPort = {
-  ask: async () => "A",
+  ask: async () => ["A"],
 };
 
 async function execTool<T>(
@@ -189,9 +189,9 @@ describe("SkillToolKit", () => {
     );
   });
 
-  it("ask_question waits on AskQuestionPort and returns answer", async () => {
+  it("ask_question waits on AskQuestionPort and returns answers", async () => {
     const store = createSessionStore();
-    let resolveAsk: ((value: string) => void) | undefined;
+    let resolveAsk: ((value: string[]) => void) | undefined;
     const askQuestion: AskQuestionPort = {
       ask: () =>
         new Promise((resolve) => {
@@ -205,18 +205,22 @@ describe("SkillToolKit", () => {
       askQuestion,
     }).createTools();
 
-    const pending = execTool<{ answer: string }>(tools.ask_question, {
-      question: "Pick one",
-      choices: [
-        { id: "A", label: "One" },
-        { id: "B", label: "Two" },
+    const pending = execTool<{ answers: string[] }>(tools.ask_question, {
+      questions: [
+        {
+          question: "Pick one",
+          choices: [
+            { id: "A", label: "One" },
+            { id: "B", label: "Two" },
+          ],
+          allowFreeform: false,
+        },
       ],
-      allowFreeform: false,
     });
 
     expect(store.getSnapshot().toolCalls[0]?.status).toBe("running");
-    resolveAsk?.("B");
-    await expect(pending).resolves.toEqual({ answer: "B" });
+    resolveAsk?.(["B"]);
+    await expect(pending).resolves.toEqual({ answers: ["B"] });
     expect(store.getSnapshot().toolCalls[0]?.status).toBe("completed");
   });
 
@@ -234,12 +238,16 @@ describe("SkillToolKit", () => {
 
     await expect(
       execTool(tools.ask_question, {
-        question: "Pick",
-        choices: [
-          { id: "A", label: "One" },
-          { id: "B", label: "Two" },
+        questions: [
+          {
+            question: "Pick",
+            choices: [
+              { id: "A", label: "One" },
+              { id: "B", label: "Two" },
+            ],
+            allowFreeform: false,
+          },
         ],
-        allowFreeform: false,
       }),
     ).rejects.toThrow("user cancelled");
 
@@ -263,12 +271,16 @@ describe("SkillToolKit", () => {
 
     await expect(
       execTool(tools.ask_question, {
-        question: "Pick",
-        choices: [
-          { id: "A", label: "One" },
-          { id: "B", label: "Two" },
+        questions: [
+          {
+            question: "Pick",
+            choices: [
+              { id: "A", label: "One" },
+              { id: "B", label: "Two" },
+            ],
+            allowFreeform: false,
+          },
         ],
-        allowFreeform: false,
       }),
     ).rejects.toBe("boom");
 

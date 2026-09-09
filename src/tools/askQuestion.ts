@@ -8,7 +8,7 @@ export type AskQuestionChoice = {
   label: string;
 };
 
-export type AskQuestionRequest = {
+export type AskQuestionItem = {
   question: string;
   choices: AskQuestionChoice[];
   /**
@@ -18,6 +18,11 @@ export type AskQuestionRequest = {
   allowFreeform: boolean;
 };
 
+export type AskQuestionRequest = {
+  /** Ask every clarifying question in one pause; do not drip them one call at a time. */
+  questions: AskQuestionItem[];
+};
+
 export type AskQuestionPort = {
-  ask(request: AskQuestionRequest): Promise<string>;
+  ask(request: AskQuestionRequest): Promise<string[]>;
 };

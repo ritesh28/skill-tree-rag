@@ -1,5 +1,6 @@
 import * as clack from "@clack/prompts";
 import type {
+  AskQuestionItem,
   AskQuestionPort,
   AskQuestionRequest,
 } from "../tools/askQuestion.js";
@@ -14,6 +15,7 @@ export type AskQuestionPromptDeps = {
 
 /**
  * Clack-backed pause/resume for the `ask_question` tool.
+ * Prompts every question in the batch before returning.
  */
 export class ClackAskQuestion implements AskQuestionPort {
   private readonly select: typeof clack.select;
@@ -30,16 +32,35 @@ export class ClackAskQuestion implements AskQuestionPort {
     this.logInfo = deps.logInfo ?? ((message) => clack.log.info(message));
   }
 
-  async ask(request: AskQuestionRequest): Promise<string> {
-    this.logInfo(request.question);
+  async ask(request: AskQuestionRequest): Promise<string[]> {
+    if (request.questions.length === 0) {
+      throw new Error("ask_question requires at least one question");
+    }
 
-    const options = request.choices.map((choice) => ({
+    const answers: string[] = [];
+    const total = request.questions.length;
+    for (let index = 0; index < total; index++) {
+      const item = request.questions[index]!;
+      answers.push(await this.askOne(item, index, total));
+    }
+    return answers;
+  }
+
+  private async askOne(
+    item: AskQuestionItem,
+    index: number,
+    total: number,
+  ): Promise<string> {
+    const prefix = total > 1 ? `(${index + 1}/${total}) ` : "";
+    this.logInfo(`Agent\n${prefix}${item.question}`);
+
+    const options = item.choices.map((choice) => ({
       value: choice.id,
       label: `${choice.id}: ${choice.label}`,
     }));
 
     const selected = await this.select({
-      message: "Choose an option",
+      message: total > 1 ? `Choose an option (${index + 1}/${total})` : "Choose an option",
       options,
     });
 
@@ -49,7 +70,7 @@ export class ClackAskQuestion implements AskQuestionPort {
     }
 
     const choiceId = selected as "A" | "B" | "C";
-    if (choiceId === "C" && request.allowFreeform) {
+    if (choiceId === "C" && item.allowFreeform) {
       const freeform = await this.text({
         message: "Your answer (C)",
         placeholder: "type freely…",
@@ -65,7 +86,7 @@ export class ClackAskQuestion implements AskQuestionPort {
       return trimmed;
     }
 
-    const match = request.choices.find((choice) => choice.id === choiceId);
+    const match = item.choices.find((choice) => choice.id === choiceId);
     return match ? `${choiceId}: ${match.label}` : choiceId;
   }
 }

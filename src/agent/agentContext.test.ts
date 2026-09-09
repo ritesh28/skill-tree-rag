@@ -28,7 +28,7 @@ const skills: SkillDefinition[] = [
 describe("AgentContext", () => {
   it("builds system prompt and tools wired to the store", async () => {
     const store = createSessionStore();
-    const ask = vi.fn().mockResolvedValue("A");
+    const ask = vi.fn().mockResolvedValue(["A"]);
 
     const bundle = new AgentContext({
       store,
@@ -71,7 +71,7 @@ describe("AgentContext", () => {
     const store = createSessionStore();
     const bundle = new AgentContext({
       store,
-      askQuestion: { ask: async () => "A" },
+      askQuestion: { ask: async () => ["A"] },
     }).build();
 
     expect(bundle.skills.length).toBeGreaterThan(0);
