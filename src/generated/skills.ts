@@ -74,18 +74,6 @@ export const skills: SkillDefinition[] = [
     "scripts": []
   },
   {
-    "id": "stay-within-skills",
-    "name": "Stay Within Skills",
-    "description": "Restrict actions to available skills and tools only",
-    "metadata": {
-      "attachType": "always",
-      "version": "0.1.0"
-    },
-    "content": "---\nname: Stay Within Skills\ndescription: Restrict actions to available skills and tools only\nmetadata:\n  attachtype: always\n  version: \"0.1.0\"\n---\n\n# Stay Within Skills\n\nDo not take actions outside the available skills and tools.\n\n- Only use skills that are attached or callable, and only run their documented scripts/tools.\n- If the user asks for something not covered by a skill or tool, say so and stop—do not improvise with ad-hoc steps outside the skill tree.\n- Prefer loading an on-demand skill when one exists for the request, instead of inventing a parallel approach.\n",
-    "subskills": [],
-    "scripts": []
-  },
-  {
     "id": "zip-code-info",
     "name": "Zip Code Info",
     "description": "Look up postal/zip code details via the Zippopotam.us API",

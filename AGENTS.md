@@ -51,19 +51,19 @@ Required:
 name: Example Skill
 description: One-line tool description
 metadata:
-  attachtype: on-demand   # always | on-demand
-  version: "0.1.0"        # recommended
-  allowedTools: []        # recommended
+  attachtype: on-demand # always | on-demand
+  version: "0.1.0" # recommended
+  allowedTools: [] # recommended
 ---
 ```
 
-| Field | Required |
-| --- | --- |
-| `name` | yes |
-| `description` | yes |
-| `metadata.attachtype` | yes (`always` \| `on-demand`) |
-| `metadata.version` | recommended |
-| `metadata.allowedTools` | recommended |
+| Field                   | Required                      |
+| ----------------------- | ----------------------------- |
+| `name`                  | yes                           |
+| `description`           | yes                           |
+| `metadata.attachtype`   | yes (`always` \| `on-demand`) |
+| `metadata.version`      | recommended                   |
+| `metadata.allowedTools` | recommended                   |
 
 No `license` field. No `scripts:` / `subskills:` frontmatter lists.
 
@@ -76,14 +76,14 @@ No `license` field. No `scripts:` / `subskills:` frontmatter lists.
 
 ## Package scripts
 
-| Script | Role |
-| --- | --- |
-| `skill-sync` | Generate `src/generated/skills.ts` for tool calling |
-| `skill-structure-check` | Validate skill folder layout |
-| `skill-reference-check` | Validate subskill/script reference coverage |
-| `skill-frontmatter-check` | Validate `SKILL.md` frontmatter with Zod |
-| `dev` | Local development |
-| `start` | App entry |
+| Script                    | Role                                                |
+| ------------------------- | --------------------------------------------------- |
+| `skill-sync`              | Generate `src/generated/skills.ts` for tool calling |
+| `skill-structure-check`   | Validate skill folder layout                        |
+| `skill-reference-check`   | Validate subskill/script reference coverage         |
+| `skill-frontmatter-check` | Validate `SKILL.md` frontmatter with Zod            |
+| `dev`                     | Local development                                   |
+| `start`                   | App entry                                           |
 
 Do not hand-edit `src/generated/skills.ts`; change skills on disk and re-sync.
 
