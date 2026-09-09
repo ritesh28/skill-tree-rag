@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://github.com/ritesh28/skill-tree-rag" target="_blank">
+    <img data-source="github" loading="lazy" alt="Skill Tree RAG" src="https://github.com/ritesh28/skill-tree-rag/raw/main/public/page_home.png" width="750"/>
+  </a>
+</p>
+
 # skill-tree-rag
 
 Terminal chatbot where **skills** (markdown trees) are first-class tools. Skills live under `skills/`; `skill-sync` generates `src/generated/skills.ts` for tool calling.
