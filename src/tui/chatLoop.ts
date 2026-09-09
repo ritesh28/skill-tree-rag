@@ -43,7 +43,13 @@ export class ChatLoop {
     this.store = deps.store;
     this.model = deps.model;
     this.prompts = deps.prompts ?? new ClackPromptAdapter();
-    this.renderer = deps.renderer ?? new ChatRenderer();
+    this.renderer =
+      deps.renderer ??
+      new ChatRenderer({
+        onThought: (durationMs) => {
+          this.store.recordTiming({ label: "think", durationMs });
+        },
+      });
     this.interrupt = deps.interrupt ?? new GenerationInterrupt();
     this.streamTextFn = deps.streamTextFn ?? streamText;
     this.maxSteps = deps.maxSteps ?? 20;
@@ -86,8 +92,6 @@ export class ChatLoop {
       askQuestion: this.askQuestion,
     }).build();
 
-    const timingsBefore = this.store.getSnapshot().timings.length;
-    const toolsBefore = this.store.getSnapshot().toolCalls.length;
     const started = Date.now();
 
     const signal = this.interrupt.begin(() => {
@@ -156,29 +160,22 @@ export class ChatLoop {
       this.renderer.endAssistant();
       if (this.isAbortError(error) || this.store.isInterrupted()) {
         this.renderer.printInterrupted();
-        this.store.recordTiming({
-          label: "request",
-          durationMs: Date.now() - started,
-        });
       } else {
         this.renderer.onError(error);
-        this.store.recordTiming({
-          label: "request",
-          durationMs: Date.now() - started,
-        });
       }
+      this.store.recordTiming({
+        label: "request",
+        durationMs: Date.now() - started,
+      });
     } finally {
       this.interrupt.end();
     }
-
-    const snap = this.store.getSnapshot();
-    this.renderer.printToolSummary(snap.toolCalls.slice(toolsBefore));
-    this.renderer.printTimings(snap.timings.slice(timingsBefore));
   }
 
   private wrapAskQuestion(inner: AskQuestionPort): AskQuestionPort {
     return {
       ask: async (request) => {
+        this.renderer.clearThinking();
         this.interrupt.pause();
         try {
           return await inner.ask(request);

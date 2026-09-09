@@ -4,9 +4,9 @@ import { TimingFormatter } from "./timingFormatter.js";
 describe("TimingFormatter", () => {
   const formatter = new TimingFormatter();
 
-  it("formats under 500ms as ~0s", () => {
-    expect(formatter.formatMs(0)).toBe("~0s");
-    expect(formatter.formatMs(499)).toBe("~0s");
+  it("formats under 500ms as briefly", () => {
+    expect(formatter.formatMs(0)).toBe("briefly");
+    expect(formatter.formatMs(499)).toBe("briefly");
   });
 
   it("ceils to whole seconds at 500ms+", () => {

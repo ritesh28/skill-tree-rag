@@ -37,10 +37,11 @@ function mockStream(parts: Array<{ type: string; [key: string]: unknown }>) {
 describe("ChatLoop", () => {
   const model = {} as LanguageModel;
 
-  it("runs a streamed turn and records request timing", async () => {
+  it("runs a streamed turn and records think timing on first text", async () => {
     const store = createSessionStore();
     const out = {
       write: vi.fn(),
+      agent: vi.fn(),
       writeLine: vi.fn(),
       info: vi.fn(),
       warn: vi.fn(),
@@ -58,9 +59,14 @@ describe("ChatLoop", () => {
     const loop = new ChatLoop({
       store,
       model,
-      askQuestion: { ask: async () => "A" },
+      askQuestion: { ask: async () => ["A"] },
       prompts: createPrompts(["/exit"]),
-      renderer: new ChatRenderer(out),
+      renderer: new ChatRenderer({
+        out,
+        onThought: (durationMs) => {
+          store.recordTiming({ label: "think", durationMs });
+        },
+      }),
       streamTextFn: streamTextFn as never,
     });
 
@@ -69,8 +75,9 @@ describe("ChatLoop", () => {
     const snap = store.getSnapshot();
     expect(snap.messages.some((m) => m.role === "user")).toBe(true);
     expect(snap.messages.some((m) => m.role === "assistant")).toBe(true);
-    expect(snap.timings.some((t) => t.label === "request")).toBe(true);
-    expect(out.write).toHaveBeenCalledWith("hello");
+    expect(snap.timings.some((t) => t.label === "think")).toBe(true);
+    expect(out.info).toHaveBeenCalledWith(expect.stringMatching(/^thought /));
+    expect(out.agent).toHaveBeenCalledWith("hello");
     expect(streamTextFn).toHaveBeenCalled();
   });
 
@@ -78,6 +85,7 @@ describe("ChatLoop", () => {
     const store = createSessionStore();
     const out = {
       write: vi.fn(),
+      agent: vi.fn(),
       writeLine: vi.fn(),
       info: vi.fn(),
       warn: vi.fn(),
@@ -87,7 +95,7 @@ describe("ChatLoop", () => {
     const abortLoop = new ChatLoop({
       store,
       model,
-      askQuestion: { ask: async () => "A" },
+      askQuestion: { ask: async () => ["A"] },
       renderer: new ChatRenderer(out),
       streamTextFn: mockStream([{ type: "abort" }]) as never,
     });
@@ -97,7 +105,7 @@ describe("ChatLoop", () => {
     const errorLoop = new ChatLoop({
       store: createSessionStore(),
       model,
-      askQuestion: { ask: async () => "A" },
+      askQuestion: { ask: async () => ["A"] },
       renderer: new ChatRenderer(out),
       streamTextFn: mockStream([
         { type: "error", error: new Error("provider down") },
@@ -112,6 +120,7 @@ describe("ChatLoop", () => {
     const prompts = createPrompts(["hello", "/exit"]);
     const out = {
       write: vi.fn(),
+      agent: vi.fn(),
       writeLine: vi.fn(),
       info: vi.fn(),
       warn: vi.fn(),
@@ -128,7 +137,7 @@ describe("ChatLoop", () => {
     const loop = new ChatLoop({
       store,
       model,
-      askQuestion: { ask: async () => "A" },
+      askQuestion: { ask: async () => ["A"] },
       prompts,
       renderer: new ChatRenderer(out),
       streamTextFn: streamTextFn as never,
@@ -142,7 +151,7 @@ describe("ChatLoop", () => {
     const cancelLoop = new ChatLoop({
       store: createSessionStore(),
       model,
-      askQuestion: { ask: async () => "A" },
+      askQuestion: { ask: async () => ["A"] },
       prompts: cancelPrompts,
       renderer: new ChatRenderer(out),
       streamTextFn: mockStream([]) as never,
@@ -155,6 +164,7 @@ describe("ChatLoop", () => {
     const store = createSessionStore();
     const out = {
       write: vi.fn(),
+      agent: vi.fn(),
       writeLine: vi.fn(),
       info: vi.fn(),
       warn: vi.fn(),
@@ -163,7 +173,7 @@ describe("ChatLoop", () => {
     const loop = new ChatLoop({
       store,
       model,
-      askQuestion: { ask: async () => "A" },
+      askQuestion: { ask: async () => ["A"] },
       renderer: new ChatRenderer(out),
       streamTextFn: vi.fn(() => {
         throw new Error("network");
@@ -188,7 +198,7 @@ describe("ChatLoop", () => {
 
     const innerAsk = vi.fn(async () => {
       expect(pause).toHaveBeenCalled();
-      return "A";
+      return ["A"];
     });
 
     let askExecute:
@@ -221,6 +231,7 @@ describe("ChatLoop", () => {
       renderer: new ChatRenderer({
         write: vi.fn(),
         writeLine: vi.fn(),
+        agent: vi.fn(),
         info: vi.fn(),
         warn: vi.fn(),
         error: vi.fn(),
@@ -233,16 +244,20 @@ describe("ChatLoop", () => {
     await expect(
       askExecute!(
         {
-          question: "Q",
-          choices: [
-            { id: "A", label: "One" },
-            { id: "B", label: "Two" },
+          questions: [
+            {
+              question: "Q",
+              choices: [
+                { id: "A", label: "One" },
+                { id: "B", label: "Two" },
+              ],
+              allowFreeform: false,
+            },
           ],
-          allowFreeform: false,
         },
         { toolCallId: "1", messages: [] },
       ),
-    ).resolves.toEqual({ answer: "A" });
+    ).resolves.toEqual({ answers: ["A"] });
     expect(innerAsk).toHaveBeenCalled();
     expect(resume).toHaveBeenCalled();
   });
