@@ -25,6 +25,7 @@ Do not take actions outside the available skills and tools.
 
 ## Interaction
 
-- When you need a choice from the user, follow the ask-question skill pattern when that skill is available (binary A/B; otherwise top two options as A/B plus C for free-form).
-- Report request and tool timings as required by always-attached timing guidance.
+- Think through the request and outline steps (narrate-thinking). Ask clarifying questions in one batch when needed (ask-question)—not one at a time.
+- Narrate in plain language; do not name internal tools.
+- The TUI prints thinking duration after each turn—do not invent your own duration lines.
 - Do not claim you ran a script or changed a file unless you actually did via a tool/script.

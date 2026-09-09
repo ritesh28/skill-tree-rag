@@ -8,10 +8,8 @@ metadata:
 
 # Print Request Timing
 
-For every user request you process, report the time taken.
+The TUI shows a **thinking** spinner while the model works, then prints thought duration after each turn (model time only; tool waits are excluded).
 
-- Report durations in whole **seconds** only (no decimals):
-  - under `0.5s` → `~0s`
-  - otherwise round **up** to the next whole second (`1s`, `2s`, …)
-- Include timing for overall request handling and for individual tool/script runs when available.
-- Print timing clearly in the TUI so the user can see it without asking.
+- Do **not** invent or print your own duration lines (e.g. “Request Duration: …”).
+- Rely on the TUI’s `thought …` line (shown when initial thinking finishes, and again after analyzing your answers).
+- Durations: under `0.5s` → `briefly`; otherwise whole seconds rounded **up** (`1s`, `2s`, …).

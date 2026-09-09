@@ -6,12 +6,12 @@ export const skills: SkillDefinition[] = [
   {
     "id": "ask-question",
     "name": "Ask Question",
-    "description": "Ask the user clarifying questions with A/B choices or A/B plus free-form C",
+    "description": "Ask clarifying questions in one batch with A/B choices or A/B plus free-form C",
     "metadata": {
       "attachType": "always",
       "version": "0.1.0"
     },
-    "content": "---\nname: Ask Question\ndescription: Ask the user clarifying questions with A/B choices or A/B plus free-form C\nmetadata:\n  attachtype: always\n  version: \"0.1.0\"\n---\n\n# Ask Question\n\nWhen you need input from the user:\n\n## Binary choice (this or that)\n\nPresent exactly two options and ask the user to answer **A** or **B**.\n\n## More than two options\n\n1. Pick the **top 2** best options and label them **A** and **B**.\n2. Offer **C** as free-form: the user provides their own answer in text.\n\nDo not proceed until the user has answered.\n",
+    "content": "---\nname: Ask Question\ndescription: Ask clarifying questions in one batch with A/B choices or A/B plus free-form C\nmetadata:\n  attachtype: always\n  version: \"0.1.0\"\n---\n\n# Ask Question\n\nWhen you need input from the user, gather **every** clarifying question you need for the next steps, then ask them **in one** `ask_question` call (multiple items in `questions`). Do not ask one question, wait, then ask another unless a later answer truly unlocks a new unknown.\n\n## Per question: binary choice (this or that)\n\nPresent exactly two options and ask the user to answer **A** or **B** (`allowFreeform: false`).\n\n## Per question: more than two options\n\n1. Pick the **top 2** best options and label them **A** and **B**.\n2. Offer **C** as free-form: the user provides their own answer in text (`allowFreeform: true`).\n\nDo not proceed until the user has answered the full batch.\n",
     "subskills": [],
     "scripts": []
   },
@@ -62,6 +62,18 @@ export const skills: SkillDefinition[] = [
     ]
   },
   {
+    "id": "narrate-thinking",
+    "name": "Narrate Thinking",
+    "description": "Think through the request thoroughly, outline steps, and narrate in plain language",
+    "metadata": {
+      "attachType": "always",
+      "version": "0.1.0"
+    },
+    "content": "---\nname: Narrate Thinking\ndescription: Think through the request thoroughly, outline steps, and narrate in plain language\nmetadata:\n  attachtype: always\n  version: \"0.1.0\"\n---\n\n# Narrate Thinking\n\nBefore you act (and when your plan changes after new answers), **think thoroughly** and tell the user what you understood—in **plain language**.\n\n## Thorough planning\n\n1. Restate the goal briefly.\n2. List the **steps** you will take (load a skill, gather missing facts, run a script, confirm outcome).\n3. If anything is unclear, identify **all** clarifying questions up front—then ask them together (see ask-question skill). Do not drip one question per turn when you already know you need several answers.\n4. After the user answers, briefly say how those answers change the plan, then continue.\n\nKeep the narration short (a few sentences or a tight bullet list), then proceed.\n\nExamples:\n\n- \"You want a PDF that says Hello World. Steps: confirm output folder and Node vs Python, then create the file.\"\n- \"You asked for US zip 90210. I'll look that up next.\"\n- \"Thanks—I'll use the current directory and Node, then create the PDF.\"\n\n## Don't\n\n- Do **not** name internal tools or APIs like `run_script`, `list_skills`, `get_skill`, or `ask_question`.\n- Do **not** write lines such as \"let me call run_script()\" or \"I'll use the get_skill tool\".\n- Prefer outcomes over mechanism: say \"look up the zip code\" not \"call the zip script tool\".\n- Do **not** ask clarifying questions one-by-one across multiple pauses when you can batch them.\n",
+    "subskills": [],
+    "scripts": []
+  },
+  {
     "id": "print-request-timing",
     "name": "Print Request Timing",
     "description": "Always report how long a request or tool step took to process",
@@ -69,7 +81,7 @@ export const skills: SkillDefinition[] = [
       "attachType": "always",
       "version": "0.1.0"
     },
-    "content": "---\nname: Print Request Timing\ndescription: Always report how long a request or tool step took to process\nmetadata:\n  attachtype: always\n  version: \"0.1.0\"\n---\n\n# Print Request Timing\n\nFor every user request you process, report the time taken.\n\n- Report durations in whole **seconds** only (no decimals):\n  - under `0.5s` → `~0s`\n  - otherwise round **up** to the next whole second (`1s`, `2s`, …)\n- Include timing for overall request handling and for individual tool/script runs when available.\n- Print timing clearly in the TUI so the user can see it without asking.\n",
+    "content": "---\nname: Print Request Timing\ndescription: Always report how long a request or tool step took to process\nmetadata:\n  attachtype: always\n  version: \"0.1.0\"\n---\n\n# Print Request Timing\n\nThe TUI shows a **thinking** spinner while the model works, then prints thought duration after each turn (model time only; tool waits are excluded).\n\n- Do **not** invent or print your own duration lines (e.g. “Request Duration: …”).\n- Rely on the TUI’s `thought …` line (shown when initial thinking finishes, and again after analyzing your answers).\n- Durations: under `0.5s` → `briefly`; otherwise whole seconds rounded **up** (`1s`, `2s`, …).\n",
     "subskills": [],
     "scripts": []
   },
