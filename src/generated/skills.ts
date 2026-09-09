@@ -8,10 +8,10 @@ export const skills: SkillDefinition[] = [
     "name": "Ask Question",
     "description": "Ask the user clarifying questions with A/B choices or A/B plus free-form C",
     "metadata": {
-      "attachType": "on-demand",
+      "attachType": "always",
       "version": "0.1.0"
     },
-    "content": "---\nname: Ask Question\ndescription: Ask the user clarifying questions with A/B choices or A/B plus free-form C\nmetadata:\n  attachtype: on-demand\n  version: \"0.1.0\"\n---\n\n# Ask Question\n\nWhen you need input from the user:\n\n## Binary choice (this or that)\n\nPresent exactly two options and ask the user to answer **A** or **B**.\n\n## More than two options\n\n1. Pick the **top 2** best options and label them **A** and **B**.\n2. Offer **C** as free-form: the user provides their own answer in text.\n\nDo not proceed until the user has answered.\n",
+    "content": "---\nname: Ask Question\ndescription: Ask the user clarifying questions with A/B choices or A/B plus free-form C\nmetadata:\n  attachtype: always\n  version: \"0.1.0\"\n---\n\n# Ask Question\n\nWhen you need input from the user:\n\n## Binary choice (this or that)\n\nPresent exactly two options and ask the user to answer **A** or **B**.\n\n## More than two options\n\n1. Pick the **top 2** best options and label them **A** and **B**.\n2. Offer **C** as free-form: the user provides their own answer in text.\n\nDo not proceed until the user has answered.\n",
     "subskills": [],
     "scripts": []
   },

@@ -2,7 +2,7 @@
 name: Ask Question
 description: Ask the user clarifying questions with A/B choices or A/B plus free-form C
 metadata:
-  attachtype: on-demand
+  attachtype: always
   version: "0.1.0"
 ---
 
