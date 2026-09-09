@@ -105,7 +105,7 @@ describe("SessionStore", () => {
     const credentials = { apiKey: "secret" };
     store.setProviderSelection({
       provider: "openai",
-      model: "gpt-4o-mini",
+      model: "gpt-5.6-luna",
       credentials,
     });
 
@@ -113,7 +113,7 @@ describe("SessionStore", () => {
     const fromGetter = store.getProviderSelection();
     expect(fromGetter).toEqual({
       provider: "openai",
-      model: "gpt-4o-mini",
+      model: "gpt-5.6-luna",
       credentials: { apiKey: "secret" },
     });
 

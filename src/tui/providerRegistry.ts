@@ -4,7 +4,7 @@ const PROVIDERS: ProviderDefinition[] = [
   {
     id: "openai",
     label: "OpenAI",
-    defaultModel: "gpt-4o-mini",
+    defaultModel: "gpt-5.6-luna",
     fields: [
       {
         key: "apiKey",
@@ -17,7 +17,7 @@ const PROVIDERS: ProviderDefinition[] = [
   {
     id: "anthropic",
     label: "Anthropic",
-    defaultModel: "claude-sonnet-4-20250514",
+    defaultModel: "claude-opus-4-20250514",
     fields: [
       {
         key: "apiKey",
@@ -30,7 +30,7 @@ const PROVIDERS: ProviderDefinition[] = [
   {
     id: "google",
     label: "Google (Gemini)",
-    defaultModel: "gemini-2.0-flash",
+    defaultModel: "gemini-2.5-pro",
     fields: [
       {
         key: "apiKey",
@@ -43,7 +43,7 @@ const PROVIDERS: ProviderDefinition[] = [
   {
     id: "groq",
     label: "Groq",
-    defaultModel: "llama-3.3-70b-versatile",
+    defaultModel: "openai/gpt-oss-120b",
     fields: [
       {
         key: "apiKey",
@@ -56,7 +56,7 @@ const PROVIDERS: ProviderDefinition[] = [
   {
     id: "mistral",
     label: "Mistral",
-    defaultModel: "mistral-small-latest",
+    defaultModel: "magistral-medium-latest",
     fields: [
       {
         key: "apiKey",
@@ -69,7 +69,7 @@ const PROVIDERS: ProviderDefinition[] = [
   {
     id: "deepseek",
     label: "DeepSeek",
-    defaultModel: "deepseek-chat",
+    defaultModel: "deepseek-reasoner",
     fields: [
       {
         key: "apiKey",
@@ -82,7 +82,7 @@ const PROVIDERS: ProviderDefinition[] = [
   {
     id: "openrouter",
     label: "OpenRouter",
-    defaultModel: "openai/gpt-4o-mini",
+    defaultModel: "openai/gpt-5.6-luna",
     fields: [
       {
         key: "apiKey",
@@ -95,7 +95,7 @@ const PROVIDERS: ProviderDefinition[] = [
   {
     id: "ollama",
     label: "Ollama (local)",
-    defaultModel: "llama3.2",
+    defaultModel: "deepseek-r1",
     fields: [
       {
         key: "baseUrl",
@@ -108,7 +108,7 @@ const PROVIDERS: ProviderDefinition[] = [
   {
     id: "azure-openai",
     label: "Azure OpenAI",
-    defaultModel: "",
+    defaultModel: "gpt-5.6-luna",
     fields: [
       {
         key: "apiKey",

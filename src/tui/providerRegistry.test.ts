@@ -36,4 +36,22 @@ describe("ProviderRegistry", () => {
       label: "OpenAI",
     });
   });
+
+  it("defaults to reasoning-oriented models", () => {
+    expect(registry.get("openai").defaultModel).toBe("gpt-5.6-luna");
+    expect(registry.get("anthropic").defaultModel).toBe(
+      "claude-opus-4-20250514",
+    );
+    expect(registry.get("google").defaultModel).toBe("gemini-2.5-pro");
+    expect(registry.get("groq").defaultModel).toBe("openai/gpt-oss-120b");
+    expect(registry.get("mistral").defaultModel).toBe(
+      "magistral-medium-latest",
+    );
+    expect(registry.get("deepseek").defaultModel).toBe("deepseek-reasoner");
+    expect(registry.get("openrouter").defaultModel).toBe(
+      "openai/gpt-5.6-luna",
+    );
+    expect(registry.get("ollama").defaultModel).toBe("deepseek-r1");
+    expect(registry.get("azure-openai").defaultModel).toBe("gpt-5.6-luna");
+  });
 });

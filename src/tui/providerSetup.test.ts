@@ -51,7 +51,7 @@ describe("ProviderSetup", () => {
   it("uses env credentials and saves the result", async () => {
     const prompts = createPromptMock({
       selectProvider: vi.fn().mockResolvedValue("openai"),
-      text: vi.fn().mockResolvedValue("gpt-4o-mini"),
+      text: vi.fn().mockResolvedValue("gpt-5.6-luna"),
     });
     const configStore = createConfigStore();
     const setup = new ProviderSetup({
@@ -66,7 +66,7 @@ describe("ProviderSetup", () => {
     const result = await setup.run();
     expect(result).toEqual({
       provider: "openai",
-      model: "gpt-4o-mini",
+      model: "gpt-5.6-luna",
       credentials: { apiKey: "sk-env" },
     });
     expect(prompts.logInfo).toHaveBeenCalledWith(
@@ -79,7 +79,7 @@ describe("ProviderSetup", () => {
     vi.stubEnv("OPENAI_API_KEY", "sk-process");
     const prompts = createPromptMock({
       selectProvider: vi.fn().mockResolvedValue("openai"),
-      text: vi.fn().mockResolvedValue("gpt-4o-mini"),
+      text: vi.fn().mockResolvedValue("gpt-5.6-luna"),
     });
     const setup = new ProviderSetup({
       prompts,
@@ -96,7 +96,7 @@ describe("ProviderSetup", () => {
     const prompts = createPromptMock({
       selectProvider: vi.fn().mockResolvedValue("openai"),
       password: vi.fn().mockResolvedValue("sk-typed"),
-      text: vi.fn().mockResolvedValue("gpt-4o-mini"),
+      text: vi.fn().mockResolvedValue("gpt-5.6-luna"),
     });
     const setup = new ProviderSetup({
       prompts,
@@ -111,11 +111,11 @@ describe("ProviderSetup", () => {
   it("uses saved secret credentials without re-prompting", async () => {
     const prompts = createPromptMock({
       selectProvider: vi.fn().mockResolvedValue("anthropic"),
-      text: vi.fn().mockResolvedValue("claude-sonnet-4-20250514"),
+      text: vi.fn().mockResolvedValue("claude-opus-4-20250514"),
     });
     const saved: ProviderSetupResult = {
       provider: "anthropic",
-      model: "claude-sonnet-4-20250514",
+      model: "claude-opus-4-20250514",
       credentials: { apiKey: "sk-saved" },
     };
     const setup = new ProviderSetup({
@@ -138,7 +138,7 @@ describe("ProviderSetup", () => {
       text: vi
         .fn()
         .mockResolvedValueOnce("http://127.0.0.1:11434")
-        .mockResolvedValueOnce("llama3.2"),
+        .mockResolvedValueOnce("deepseek-r1"),
     });
     const setup = new ProviderSetup({
       prompts,
@@ -148,7 +148,7 @@ describe("ProviderSetup", () => {
 
     await expect(setup.run()).resolves.toEqual({
       provider: "ollama",
-      model: "llama3.2",
+      model: "deepseek-r1",
       credentials: { baseUrl: "http://127.0.0.1:11434" },
     });
   });
@@ -157,13 +157,13 @@ describe("ProviderSetup", () => {
     const prompts = createPromptMock({
       selectProvider: vi.fn().mockResolvedValue("groq"),
       password: vi.fn().mockResolvedValue("groq-key"),
-      text: vi.fn().mockResolvedValue("llama-3.3-70b-versatile"),
+      text: vi.fn().mockResolvedValue("openai/gpt-oss-120b"),
     });
     const setup = new ProviderSetup({
       prompts,
       configStore: createConfigStore({
         provider: "openai",
-        model: "gpt-4o-mini",
+        model: "gpt-5.6-luna",
         credentials: { apiKey: "other" },
       }),
       env: { get: () => undefined },
@@ -175,7 +175,7 @@ describe("ProviderSetup", () => {
     });
   });
 
-  it("prompts azure deployment name when default model is empty", async () => {
+  it("prompts azure deployment name as the model", async () => {
     const prompts = createPromptMock({
       selectProvider: vi.fn().mockResolvedValue("azure-openai"),
       password: vi.fn().mockResolvedValue("azure-key"),
@@ -196,6 +196,7 @@ describe("ProviderSetup", () => {
     expect(prompts.text).toHaveBeenCalledWith(
       expect.objectContaining({
         message: "Azure OpenAI deployment name (model)",
+        defaultValue: "gpt-5.6-luna",
       }),
     );
   });
@@ -297,7 +298,7 @@ describe("ProviderSetup", () => {
     const prompts = createPromptMock({
       selectProvider: vi.fn().mockResolvedValue("openai"),
       password: vi.fn().mockResolvedValue("token-value"),
-      text: vi.fn().mockResolvedValue("gpt-4o-mini"),
+      text: vi.fn().mockResolvedValue("gpt-5.6-luna"),
     });
     const registry = {
       list: () => [],
@@ -305,7 +306,7 @@ describe("ProviderSetup", () => {
       get: () => ({
         id: "openai" as const,
         label: "OpenAI",
-        defaultModel: "gpt-4o-mini",
+        defaultModel: "gpt-5.6-luna",
         fields: [{ key: "token", label: "Token", secret: true }],
       }),
     } as unknown as ProviderRegistry;
@@ -324,7 +325,7 @@ describe("ProviderSetup", () => {
     const prompts = createPromptMock({
       selectProvider: vi.fn().mockResolvedValue("deepseek"),
       password: vi.fn().mockResolvedValue("ds-key"),
-      text: vi.fn().mockResolvedValue("deepseek-chat"),
+      text: vi.fn().mockResolvedValue("deepseek-reasoner"),
     });
     const result = await promptProviderSetup({
       prompts,

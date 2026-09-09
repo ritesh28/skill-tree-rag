@@ -55,7 +55,7 @@ describe("ProviderConfigStore", () => {
     const store = new ProviderConfigStore(filePath, fsPort);
     const result = {
       provider: "openai" as const,
-      model: "gpt-4o-mini",
+      model: "gpt-5.6-luna",
       credentials: { apiKey: "sk-test" },
     };
 
@@ -79,7 +79,7 @@ describe("ProviderConfigStore", () => {
       expect(store.load()).toBeNull();
       const result = {
         provider: "openai" as const,
-        model: "gpt-4o-mini",
+        model: "gpt-5.6-luna",
         credentials: { apiKey: "sk-disk" },
       };
       store.save(result);
