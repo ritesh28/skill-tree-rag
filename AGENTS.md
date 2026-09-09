@@ -17,7 +17,7 @@ A Node.js + TypeScript TUI chatbot (Vercel AI SDK, `@clack/prompts`) where **ski
 ## Repo layout
 
 ```
-src/           # app: cli, agent, tools, store, script runner
+src/           # app: tui, agent, tools, store, script runner
 src/generated/ # skill-sync output (skills.ts)
 skills/        # author-facing skill tree (do not invent alternate layouts)
 .scratch/      # notes / ideas — not runtime
@@ -105,6 +105,22 @@ Also export `skills`, `skillsById`, `alwaysAttachedSkills`.
 ### Providers (curated list)
 
 OpenAI, Anthropic, Google (Gemini), Groq, Mistral, DeepSeek, OpenRouter, Ollama (local), Azure OpenAI.
+
+Setup: `promptProviderSetup()` in `src/tui/` (Clack prompts). Saves to `~/.config/skill-tree-rag/config.json`. Prefers env vars when set:
+
+| Provider | Env |
+| --- | --- |
+| OpenAI | `OPENAI_API_KEY` |
+| Anthropic | `ANTHROPIC_API_KEY` |
+| Google | `GOOGLE_GENERATIVE_AI_API_KEY` |
+| Groq | `GROQ_API_KEY` |
+| Mistral | `MISTRAL_API_KEY` |
+| DeepSeek | `DEEPSEEK_API_KEY` |
+| OpenRouter | `OPENROUTER_API_KEY` |
+| Ollama | `OLLAMA_BASE_URL` (default `http://localhost:11434`) |
+| Azure OpenAI | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_API_VERSION` |
+
+Never commit secrets. Config under `~/.config` is local-only.
 
 ### MVP tool surface
 

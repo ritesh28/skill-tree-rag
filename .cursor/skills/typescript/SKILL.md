@@ -26,7 +26,9 @@ Conventions for **skill-tree-rag** TypeScript (Node 20+, ESM, strict).
 
 ```ts
 // Good: export the class; keep schema/helpers private
-const schema = z.object({ /* ... */ });
+const schema = z.object({
+  /* ... */
+});
 
 export class ThingParser {
   parse(input: string): Result {
@@ -63,7 +65,7 @@ export const schema = z.object({});
 - Use **Vitest** only (`*.test.ts` next to the unit under test, e.g. `sessionStore.test.ts`).
 - Import from `vitest` (`describe` / `it` / `expect`) — do not rely on globals.
 - Do **not** add one-off smoke scripts; cover behavior with tests.
-- Aim for **100% coverage** on new/changed runtime modules (`npm run test:coverage`).
+- Aim for **90% coverage** on new/changed runtime modules (`npm run test:coverage`).
 - Type-only files (e.g. `types.ts`) are excluded from coverage thresholds.
 - `*.test.ts` files are excluded from `tsc` (`tsconfig` exclude).
 
@@ -74,12 +76,12 @@ npm run test:coverage
 
 ## Project layout hints
 
-| Area | Where |
-| --- | --- |
-| App / tooling code | `src/**` |
-| Skill authoring (not TS runtime) | `skills/**` |
-| Generated skill registry | `src/generated/skills.ts` — do not hand-edit; run `npm run skill-sync` |
-| System prompt | `src/agent/system-prompt.md` |
+| Area                             | Where                                                                  |
+| -------------------------------- | ---------------------------------------------------------------------- |
+| App / tooling code               | `src/**` (`src/tui` for provider prompts)                              |
+| Skill authoring (not TS runtime) | `skills/**`                                                            |
+| Generated skill registry         | `src/generated/skills.ts` — do not hand-edit; run `npm run skill-sync` |
+| System prompt                    | `src/agent/system-prompt.md`                                           |
 
 ## Checklist before finishing TS work
 
